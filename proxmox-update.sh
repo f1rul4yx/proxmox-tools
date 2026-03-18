@@ -30,6 +30,10 @@ fi
 
 source "$ENV_FILE"
 
+LOG_DIR="${SCRIPT_DIR}/logs"
+LOG_FILE="${LOG_DIR}/update_$(date +%Y-%m-%d_%H-%M-%S).log"
+mkdir -p "$LOG_DIR"
+
 # -----------------------------------------
 # FUNCIONES DEFINIDAS
 # -----------------------------------------
@@ -93,8 +97,10 @@ update_machine() {
   ssh -o StrictHostKeyChecking=no \
       -o ConnectTimeout=10 \
       -o BatchMode=yes \
+      -o ServerAliveInterval=30 \
+      -o ServerAliveCountMax=3 \
       "root@${ip}" \
-      "apt update && apt upgrade -y"
+      "DEBIAN_FRONTEND=noninteractive apt update && DEBIAN_FRONTEND=noninteractive apt upgrade -y"
 
   if [[ $? -eq 0 ]]; then
     echo -e "${VERDE}[+] '${name}' actualizado correctamente.${RESET}"
@@ -119,9 +125,12 @@ show_machine_list() {
 
 check_deps
 
+exec > >(tee -a "$LOG_FILE") 2>&1
+
 echo ""
 echo "========================================="
 echo "   Actualización de máquinas Proxmox     "
+echo "   $(date '+%Y-%m-%d %H:%M:%S')          "
 echo "========================================="
 
 # Contenedores LXC
@@ -155,4 +164,4 @@ else
 fi
 
 echo ""
-echo -e "${VERDE}[+] Proceso completado.${RESET}"
+echo -e "${VERDE}[+] Proceso completado. Log guardado en: ${LOG_FILE}${RESET}"

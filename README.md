@@ -139,3 +139,9 @@ Antes de ejecutar el script, cargar la clave privada en el agente SSH:
 ssh-agent bash
 ssh-add ~/.ssh/id_rsa
 ```
+
+Los logs se guardan en `logs/`. Para excluirlos del repositorio:
+
+```bash
+echo "logs/" >> .gitignore
+```
