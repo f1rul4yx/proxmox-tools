@@ -132,3 +132,10 @@ chmod +x proxmox-update.sh
 ```
 
 > La IP se calcula a partir del VMID con la misma convención que `proxmox-lxc.sh`. Las máquinas deben tener configurada la SSH key para acceso como `root`.
+
+Antes de ejecutar el script, cargar la clave privada en el agente SSH:
+
+```bash
+ssh-agent bash
+ssh-add ~/.ssh/id_rsa
+```
