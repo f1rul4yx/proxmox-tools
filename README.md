@@ -6,6 +6,7 @@ Herramientas para gestionar Proxmox VE de forma remota usando la API REST.
 
 - `curl`
 - `jq`
+- `ssh`
 - API Token de Proxmox con Privilege Separation desactivado
 
 ## Instalación
@@ -97,3 +98,37 @@ unprivileged: 1
 ```
 
 Para cambiar los valores por defecto, editar la sección "CONFIGURACIÓN LXC" del script.
+
+---
+
+### proxmox-update.sh
+
+Actualiza todos los contenedores LXC y VMs en ejecución ejecutando `apt update && apt upgrade -y` en cada uno vía SSH. Si una máquina falla, continúa con la siguiente.
+
+```bash
+chmod +x proxmox-update.sh
+./proxmox-update.sh
+```
+
+```
+=========================================
+   Actualización de máquinas Proxmox
+=========================================
+
+[*] Obteniendo contenedores LXC en ejecución...
+[i]   - mi-servicio (ID: 2020, IP: 192.168.2.20)
+[i]   - otro-ct (ID: 2021, IP: 192.168.2.21)
+
+[i] Actualizando 'mi-servicio' (ID: 2020, IP: 192.168.2.20)...
+[+] 'mi-servicio' actualizado correctamente.
+
+[i] Actualizando 'otro-ct' (ID: 2021, IP: 192.168.2.21)...
+[+] 'otro-ct' actualizado correctamente.
+
+[*] Obteniendo VMs en ejecución...
+[!] No hay VMs en ejecución.
+
+[+] Proceso completado.
+```
+
+> La IP se calcula a partir del VMID con la misma convención que `proxmox-lxc.sh`. Las máquinas deben tener configurada la SSH key para acceso como `root`.
