@@ -94,7 +94,8 @@ update_machine() {
 
   echo -e "${AZUL}[i] Actualizando '${name}' (ID: ${vmid}, IP: ${ip})...${RESET}"
 
-  ssh -o StrictHostKeyChecking=no \
+  ssh -n \
+      -o StrictHostKeyChecking=no \
       -o ConnectTimeout=10 \
       -o BatchMode=yes \
       -o ServerAliveInterval=30 \
