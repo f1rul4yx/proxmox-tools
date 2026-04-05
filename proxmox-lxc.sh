@@ -128,28 +128,34 @@ next_id() {
 }
 
 # Función: Calcular la IP a partir del CT ID
-#   2017  -> 192.168.2.17
-#   2230  -> 192.168.2.230
-#   2007  -> 192.168.2.7
+#   2001  -> 192.168.2.1
+#   2011  -> 192.168.2.11
+#   3007  -> 192.168.3.7
+#   0013  -> 192.168.0.13
 calculate_ip() {
   local ctid="$1"
-  local host_part="${ctid#20}"
+  local padded
+  padded=$(printf "%04d" "$ctid")
 
-  host_part=$((10#$host_part))
+  local octet3 octet4
+  octet3=$((10#${padded:0:1}))
+  octet4=$((10#${padded:1}))
 
-  echo "192.168.2.${host_part}"
+  echo "192.168.${octet3}.${octet4}"
 }
 
 # Función: Calcular el startup order a partir del CT ID
-#   2017  -> order=16
+#   2001  -> order=0
 #   2003  -> order=2
-#   2230  -> order=229
+#   2017  -> order=16
 calculate_startup_order() {
   local ctid="$1"
-  local host_part="${ctid#20}"
+  local padded
+  padded=$(printf "%04d" "$ctid")
 
-  host_part=$((10#$host_part))
-  local order=$((host_part - 1))
+  local octet4
+  octet4=$((10#${padded:1}))
+  local order=$((octet4 - 1))
 
   echo "order=${order},up=10,down=30"
 }

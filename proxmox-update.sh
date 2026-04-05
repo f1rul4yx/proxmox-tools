@@ -61,16 +61,20 @@ api_get() {
 }
 
 # Función: Calcular la IP a partir del VMID
-#   2017  -> 192.168.2.17
-#   2230  -> 192.168.2.230
-#   2007  -> 192.168.2.7
+#   2001  -> 192.168.2.1
+#   2011  -> 192.168.2.11
+#   3007  -> 192.168.3.7
+#   0013  -> 192.168.0.13
 calculate_ip() {
   local vmid="$1"
-  local host_part="${vmid#20}"
+  local padded
+  padded=$(printf "%04d" "$vmid")
 
-  host_part=$((10#$host_part))
+  local octet3 octet4
+  octet3=$((10#${padded:0:1}))
+  octet4=$((10#${padded:1}))
 
-  echo "192.168.2.${host_part}"
+  echo "192.168.${octet3}.${octet4}"
 }
 
 # Función: Obtener lista de contenedores LXC en ejecución
