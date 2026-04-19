@@ -7,6 +7,7 @@ Herramientas para gestionar Proxmox VE de forma remota usando la API REST.
 - `curl`
 - `jq`
 - `ssh`
+- `scp`
 - API Token de Proxmox con Privilege Separation desactivado
 
 ## Instalación
@@ -146,3 +147,30 @@ Los logs se guardan en `logs/`. Para excluirlos del repositorio:
 ```bash
 echo "logs/" >> .gitignore
 ```
+
+---
+
+### proxmox-bashrc.sh
+
+Despliega `configs/.bashrc` en una máquina concreta o en todas las que estén en ejecución. Hace backup del `.bashrc` existente antes de reemplazarlo.
+
+```bash
+chmod +x proxmox-bashrc.sh
+
+# Una máquina
+./proxmox-bashrc.sh 2010
+
+# Todas
+./proxmox-bashrc.sh all
+```
+
+```
+=========================================
+   Despliegue de .bashrc en Proxmox
+=========================================
+
+[i] Desplegando en 'mi-servicio' (ID: 2010, IP: 192.168.2.10)...
+[+] 'mi-servicio' actualizado correctamente.
+```
+
+Para personalizar el `.bashrc`, editar `configs/.bashrc` y relanzar el script.
