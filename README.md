@@ -174,3 +174,34 @@ chmod +x proxmox-bashrc.sh
 ```
 
 Para personalizar el `.bashrc`, editar `configs/.bashrc` y relanzar el script.
+
+---
+
+### proxmox-timezone.sh
+
+Configura el timezone en una máquina concreta o en todas las que estén en ejecución. Por defecto usa `Europe/Madrid`.
+
+```bash
+chmod +x proxmox-timezone.sh
+
+# Una máquina
+./proxmox-timezone.sh 2010
+
+# Todas
+./proxmox-timezone.sh all
+```
+
+```
+=========================================
+   Configuración de timezone en Proxmox
+=========================================
+
+[i] Timezone objetivo: Europe/Madrid
+
+[i] Configurando timezone en 'stash' (ID: 2010, IP: 192.168.2.10)...
+[+] 'stash' timezone configurado correctamente.
+                Time zone: Europe/Madrid (CEST, +0200)
+               Local time: Tue 2026-04-21 16:57:18 CEST
+```
+
+Para cambiar el timezone, editar la variable `TIMEZONE` al inicio del script.
