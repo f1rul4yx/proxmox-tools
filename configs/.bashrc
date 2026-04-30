@@ -15,7 +15,7 @@ alias l='ls -lah --color=auto'
 
 # Bash-completion
 if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
+  . /usr/share/bash-completion/bash_completion
 fi
 
 # Buscar en el historial con flechas arriba/abajo
