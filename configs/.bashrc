@@ -12,6 +12,7 @@ alias rm='rm -iv'
 alias cp='cp -iv'
 alias mv='mv -iv'
 alias l='ls -lah --color=auto'
+alias diffc='git diff --no-index --color=always | delta'
 
 # Bash-completion
 if [ -f /usr/share/bash-completion/bash_completion ]; then
