@@ -26,7 +26,8 @@ source "$ENV_FILE"
 # CONFIGURACIÓN LXC
 # -----------------------------------------
 
-TEMPLATE="debian-13-standard_13.1-2_amd64.tar.zst"
+TEMPLATE_DEBIAN13="debian-13-standard_13.1-2_amd64.tar.zst"
+TEMPLATE_DEBIAN12="debian-12-standard_12.12-1_amd64.tar.zst"
 TEMPLATE_STORAGE="local"
 DISK_STORAGE="local-lvm"
 DISK_SIZE="8"
@@ -172,6 +173,18 @@ ask_user() {
     echo "[-] CT ID no válido: $CTID"
     exit 1
   fi
+
+  echo "Debian version [13/12] (default: 13): "
+  read -rp "> " debian_version
+  debian_version="${debian_version:-13}"
+  case "$debian_version" in
+    12) TEMPLATE="$TEMPLATE_DEBIAN12" ;;
+    13) TEMPLATE="$TEMPLATE_DEBIAN13" ;;
+    *)
+      echo "[-] Versión no válida: $debian_version"
+      exit 1
+      ;;
+  esac
 
   read -rp "Hostname: " HOSTNAME
   if [[ -z "$HOSTNAME" ]]; then
