@@ -59,7 +59,7 @@ Hostname: mi-servicio
   Cores:     1
   IP:        192.168.2.20/22
   Gateway:   192.168.0.1
-  DNS:       192.168.2.3
+  DNS:       192.168.2.12
   SSH key:   sí (sin password)
   Nesting:   sí
   Onboot:    sí
@@ -89,7 +89,7 @@ arch: amd64
 cores: 1
 features: nesting=1
 memory: 512
-nameserver: 192.168.2.3
+nameserver: 192.168.2.12
 net0: name=eth0,bridge=vmbr0,firewall=1,gw=192.168.0.1,ip=192.168.2.X/22,type=veth
 onboot: 1
 ostype: debian
