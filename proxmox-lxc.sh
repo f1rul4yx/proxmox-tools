@@ -146,9 +146,9 @@ calculate_ip() {
 }
 
 # Función: Calcular el startup order a partir del CT ID
-#   2001  -> order=0
-#   2003  -> order=2
-#   2017  -> order=16
+#   2001  -> order=1
+#   2011  -> order=11
+#   2021  -> order=21
 calculate_startup_order() {
   local ctid="$1"
   local padded
@@ -156,9 +156,8 @@ calculate_startup_order() {
 
   local octet4
   octet4=$((10#${padded:1}))
-  local order=$((octet4 - 1))
 
-  echo "order=${order},up=10,down=30"
+  echo "order=${octet4},up=10,down=30"
 }
 
 # Función: Pedir datos al usuario
