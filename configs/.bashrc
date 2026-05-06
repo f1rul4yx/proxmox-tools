@@ -1,25 +1,19 @@
-# ~/.bashrc
+PS1='[\u@\h \W]\$ '
 
-# Colores en ls y grep
+# Alias
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
-
-# Prompt con colores: usuario@host:directorio$
-PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0m\]\$ '
-
-# Alias útiles
+alias l='ls -lah --color=auto'
 alias rm='rm -iv'
 alias cp='cp -iv'
 alias mv='mv -iv'
-alias l='ls -lah --color=auto'
-alias diffc='git diff --no-index --color=always | delta'
 
-# Bash-completion
+# Activar bash-completion
 if [ -f /usr/share/bash-completion/bash_completion ]; then
   . /usr/share/bash-completion/bash_completion
 fi
 
-# Buscar en el historial con flechas arriba/abajo
+# Buscar en el historial por prefijo con flechas arriba/abajo
 bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
 
@@ -27,11 +21,11 @@ bind '"\e[B": history-search-forward'
 bind 'set completion-ignore-case on'
 
 # Historial persistente e ilimitado
-HISTSIZE=-1
-HISTFILESIZE=-1
-HISTTIMEFORMAT="%F %T  "
-shopt -s histappend
-HISTCONTROL=ignoredups
+HISTSIZE=-1                                         # Sin límite de comandos en memoria
+HISTFILESIZE=-1                                     # Sin límite de líneas en el archivo .bash_history
+HISTTIMEFORMAT="%F %T  "                            # Mostrar fecha y hora en el historial
+shopt -s histappend                                 # Añadir, nunca sobreescribir
+HISTCONTROL=ignoredups                              # Ignorar duplicados consecutivos
 HISTFILE=~/.bash_history
 export HISTFILE HISTSIZE HISTFILESIZE
-PROMPT_COMMAND='history -a; history -c; history -r'
+PROMPT_COMMAND='history -a; history -c; history -r' # Guardar cada comando al instante
