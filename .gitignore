@@ -1,5 +1,2 @@
 .env
 logs/
-
-# OpenCode
-AGENTS.md
