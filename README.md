@@ -205,3 +205,40 @@ chmod +x proxmox-timezone.sh
 ```
 
 Para cambiar el timezone, editar la variable `TIMEZONE` al inicio del script.
+
+---
+
+### proxmox-exec.sh
+
+Ejecuta cualquier comando en una máquina concreta o en todas las que estén en ejecución vía SSH y muestra el output por máquina. El comando se pasa como argumento (entre comillas si tiene espacios).
+
+```bash
+chmod +x proxmox-exec.sh
+
+# Todas las máquinas
+./proxmox-exec.sh "cat /etc/crontab"
+
+# Una máquina
+./proxmox-exec.sh 2010 "systemctl status nginx"
+```
+
+```
+=========================================
+   Ejecución remota en Proxmox
+=========================================
+
+[i] Comando: cat /etc/crontab
+[i] Target:  all
+
+[*] Obteniendo contenedores LXC en ejecución...
+
+========================================
+  mi-servicio (ID: 2010, IP: 192.168.2.10)
+========================================
+# Edit this file to define tasks to be run by cron.
+#
+...
+---
+```
+
+El comando se ejecuta con la misma conexión SSH que las otras herramientas (trusted network, sin verificación de host key). Si falla el SSH (máquina apagada, HAOS, etc.) se muestra el error y continúa con la siguiente.
