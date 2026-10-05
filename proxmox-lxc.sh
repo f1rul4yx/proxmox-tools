@@ -26,7 +26,7 @@ source "$ENV_FILE"
 # CONFIGURACIÓN LXC
 # -----------------------------------------
 
-TEMPLATE_DEBIAN13="debian-13-standard_13.1-2_amd64.tar.zst"
+TEMPLATE_DEBIAN13="debian-13-standard_13.6-1_amd64.tar.zst"
 TEMPLATE_DEBIAN12="debian-12-standard_12.12-1_amd64.tar.zst"
 TEMPLATE_STORAGE="local"
 DISK_STORAGE="local-lvm"
