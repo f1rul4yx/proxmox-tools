@@ -105,11 +105,16 @@ Para cambiar los valores por defecto, editar la sección "CONFIGURACIÓN LXC" de
 
 ### proxmox-update.sh
 
-Actualiza todos los contenedores LXC y VMs en ejecución ejecutando `apt update && apt upgrade -y` en cada uno vía SSH. Si una máquina falla, continúa con la siguiente.
+Actualiza contenedores LXC y VMs ejecutando `apt update && apt upgrade -y` vía SSH, en una máquina concreta o en todas las que estén en ejecución. Si una máquina falla, continúa con la siguiente.
 
 ```bash
 chmod +x proxmox-update.sh
-./proxmox-update.sh
+
+# Una máquina
+./proxmox-update.sh 2010
+
+# Todas
+./proxmox-update.sh all
 ```
 
 ```
@@ -240,5 +245,7 @@ chmod +x proxmox-exec.sh
 ...
 ---
 ```
+
+> Con un VMID concreto, el nombre se resuelve por API contra LXC y luego QEMU; si no se encuentra, se usa `vmid-<n>`.
 
 El comando se ejecuta con la misma conexión SSH que las otras herramientas (trusted network, sin verificación de host key). Si falla el SSH (máquina apagada, HAOS, etc.) se muestra el error y continúa con la siguiente.

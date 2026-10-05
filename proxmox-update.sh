@@ -3,7 +3,7 @@
 # Actualización de máquinas en Proxmox
 # Autor: Diego Vargas
 # Fecha: 2026-03-18
-# Versión: 1.0
+# Versión: 1.1
 # =========================================
 
 
@@ -124,6 +124,56 @@ show_machine_list() {
   done <<< "$list"
 }
 
+# Función: Actualizar todas las máquinas en ejecución
+update_all() {
+  # Contenedores LXC
+  echo ""
+  echo "[*] Obteniendo contenedores LXC en ejecución..."
+  lxc_list=$(get_lxc_list)
+
+  if [[ -z "$lxc_list" ]]; then
+    echo -e "${AMARILLO}[!] No hay contenedores LXC en ejecución.${RESET}"
+  else
+    show_machine_list "$lxc_list"
+    while IFS=$'\t' read -r vmid name; do
+      echo ""
+      update_machine "$vmid" "$name"
+    done <<< "$lxc_list"
+  fi
+
+  # Máquinas virtuales QEMU
+  echo ""
+  echo "[*] Obteniendo VMs en ejecución..."
+  vm_list=$(get_vm_list)
+
+  if [[ -z "$vm_list" ]]; then
+    echo -e "${AMARILLO}[!] No hay VMs en ejecución.${RESET}"
+  else
+    show_machine_list "$vm_list"
+    while IFS=$'\t' read -r vmid name; do
+      echo ""
+      update_machine "$vmid" "$name"
+    done <<< "$vm_list"
+  fi
+}
+
+# Función: Actualizar una máquina concreta por VMID
+update_one() {
+  local target_vmid="$1"
+  local name
+
+  name=$(api_get "/nodes/${PROXMOX_NODE}/lxc" | jq -r --arg id "$target_vmid" '.data[] | select(.vmid == ($id | tonumber)) | .name')
+  if [[ -z "$name" ]]; then
+    name=$(api_get "/nodes/${PROXMOX_NODE}/qemu" | jq -r --arg id "$target_vmid" '.data[] | select(.vmid == ($id | tonumber)) | .name')
+  fi
+  if [[ -z "$name" ]]; then
+    name="vmid-${target_vmid}"
+  fi
+
+  echo ""
+  update_machine "$target_vmid" "$name"
+}
+
 # -----------------------------------------
 # PROGRAMA
 # -----------------------------------------
@@ -138,35 +188,25 @@ echo "   Actualización de máquinas Proxmox     "
 echo "   $(date '+%Y-%m-%d %H:%M:%S')          "
 echo "========================================="
 
-# Contenedores LXC
-echo ""
-echo "[*] Obteniendo contenedores LXC en ejecución..."
-lxc_list=$(get_lxc_list)
-
-if [[ -z "$lxc_list" ]]; then
-  echo -e "${AMARILLO}[!] No hay contenedores LXC en ejecución.${RESET}"
-else
-  show_machine_list "$lxc_list"
-  while IFS=$'\t' read -r vmid name; do
-    echo ""
-    update_machine "$vmid" "$name"
-  done <<< "$lxc_list"
+if [[ $# -eq 0 ]]; then
+  echo -e "${ROJO}[-] Uso: $0 <vmid> | all${RESET}"
+  echo -e "${AZUL}[i]   $0 2010       -> actualiza solo la máquina con ID 2010${RESET}"
+  echo -e "${AZUL}[i]   $0 all        -> actualiza todas las máquinas en ejecución${RESET}"
+  exit 1
 fi
 
-# Máquinas virtuales QEMU
-echo ""
-echo "[*] Obteniendo VMs en ejecución..."
-vm_list=$(get_vm_list)
-
-if [[ -z "$vm_list" ]]; then
-  echo -e "${AMARILLO}[!] No hay VMs en ejecución.${RESET}"
-else
-  show_machine_list "$vm_list"
-  while IFS=$'\t' read -r vmid name; do
-    echo ""
-    update_machine "$vmid" "$name"
-  done <<< "$vm_list"
-fi
+case "$1" in
+  all)
+    update_all
+    ;;
+  *)
+    if ! [[ "$1" =~ ^[0-9]+$ ]]; then
+      echo -e "${ROJO}[-] VMID no válido: $1${RESET}"
+      exit 1
+    fi
+    update_one "$1"
+    ;;
+esac
 
 echo ""
 echo -e "${VERDE}[+] Proceso completado. Log guardado en: ${LOG_FILE}${RESET}"
